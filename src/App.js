@@ -4,6 +4,8 @@ import Logo from './components/Logo/Logo.js';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm.js';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition.js';
 import Rank from './components/Rank/Rank.js';
+import SignIn from './components/SignIn/SignIn';
+import Register from './components/Register/Register';
 import Particles from 'react-particles-js';
 import Clarifai from 'clarifai';
 
@@ -36,7 +38,9 @@ class App extends Component {
         right: 0,
         top: 0,
         bottom: 0
-      }
+      },
+      route: 'signin',
+      isSignedIn: false
     }
   }
 
@@ -56,7 +60,6 @@ class App extends Component {
   }
 
   displayFaceBox = (box) => {
-    console.log(box);
     this.setState({box: box})
   }
 
@@ -76,16 +79,51 @@ class App extends Component {
       .catch(error => console.log(error))
   }
 
-  render() {
+  onRouteChange = (route) => {
+    this.setState({route: route})
+    if (route === 'home') {
+      this.setState({isSignedIn: true})
+    } else {
+      this.setState({isSignedIn: false})
+    }
+  }
+
+  homePage = () => {
     return (
-      <div className="App">
-        <Particles className="particles" params={particlesOptions}/>
-        <Navigation />
+      <div>
         <Logo />
         <Rank />
         <ImageLinkForm onInputChange={this.onInputChange} 
                       onDetectSubmitted={this.onDetectSubmitted}/>
         <FaceRecognition imgSrc={this.state.imageUrl} box={this.state.box}/>
+      </div> 
+    )
+  }
+
+  render() {
+
+    var content;
+
+    switch(this.state.route) {
+      case 'home':
+        content = this.homePage()
+        break;
+      case 'register':
+        content = <Register onRouteChange={this.onRouteChange} />
+        break;
+      case 'signin':
+      default:
+        content = <SignIn onRouteChange={this.onRouteChange} />
+    }
+
+    return (
+      <div className="App">
+        <Particles className="particles" params={particlesOptions}/>
+        <Navigation onRouteChange={this.onRouteChange} isSignedIn={this.state.isSignedIn}/>
+        {
+          content
+        }
+        
       </div>
     );
   }
