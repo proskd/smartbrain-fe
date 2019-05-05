@@ -1,6 +1,7 @@
 # Smart Brain Front End
 face recognition app front-end
 
+Works in concert with [SmartBrain Api](https://github.com/proskd/smartbrain-api) project
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
