@@ -82,8 +82,24 @@ class App extends Component {
       )
       .then((response) => {
         this.displayFaceBox(this.calculateFaceLocations(response));
+        this.updateUserEntrieSubmitted();
       })
       .catch(error => console.log(error))
+  }
+
+  updateUserEntrieSubmitted = () => {
+    fetch("http://localhost:3001/image", {
+      method: 'PUT',
+      headers: {
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify({
+        id: this.state.user.id
+      })
+    }).then(res => res.json())
+    .then((count) => {
+      this.setState(Object.assign(this.state.user, {entries: count}))
+    })
   }
 
   loadUser = (data) => {
@@ -109,7 +125,7 @@ class App extends Component {
     return (
       <div>
         <Logo />
-        <Rank />
+        <Rank name={this.state.user.name} entries={this.state.user.entries}/>
         <ImageLinkForm onInputChange={this.onInputChange} 
                       onDetectSubmitted={this.onDetectSubmitted}/>
         <FaceRecognition imgSrc={this.state.imageUrl} box={this.state.box}/>
@@ -130,7 +146,7 @@ class App extends Component {
         break;
       case 'signin':
       default:
-        content = <SignIn onRouteChange={this.onRouteChange} />
+        content = <SignIn onRouteChange={this.onRouteChange} loadUser={this.loadUser}/>
     }
 
     return (
