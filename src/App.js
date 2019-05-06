@@ -23,32 +23,34 @@ const particlesOptions = {
   }
 };
 
+const initialState = {
+  input: '',
+  imageUrl: '',
+  clarifaiApp: new Clarifai.App({
+    apiKey: "86b450683ca541aeb9a0d952716829ec"
+  }),
+  box: {
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0
+  },
+  route: 'signin',
+  isSignedIn: false,
+  user: {
+      id: '',
+      name: '',
+      email: '',
+      entries: 0,
+      joined: new Date()
+  }
+}
+
 class App extends Component {
 
   constructor() {
     super()
-    this.state = {
-      input: 'https://www.scienceabc.com/wp-content/uploads/2015/10/smile-2.jpg',
-      imageUrl: 'https://www.scienceabc.com/wp-content/uploads/2015/10/smile-2.jpg',
-      clarifaiApp: new Clarifai.App({
-        apiKey: "86b450683ca541aeb9a0d952716829ec"
-      }),
-      box: {
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0
-      },
-      route: 'signin',
-      isSignedIn: false,
-      user: {
-          id: '',
-          name: '',
-          email: '',
-          entries: 0,
-          joined: new Date()
-      }
-    }
+    this.state = initialState;
   }
 
   calculateFaceLocations = (data) => {
@@ -117,7 +119,7 @@ class App extends Component {
     if (route === 'home') {
       this.setState({isSignedIn: true})
     } else {
-      this.setState({isSignedIn: false})
+      this.setState(initialState)
     }
   }
 
