@@ -23,18 +23,20 @@ const particlesOptions = {
   }
 };
 
+const defaultBox = {
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0
+}
+
 const initialState = {
   input: '',
   imageUrl: '',
   clarifaiApp: new Clarifai.App({
     apiKey: "86b450683ca541aeb9a0d952716829ec"
   }),
-  box: {
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0
-  },
+  boxes: [defaultBox],
   route: 'signin',
   isSignedIn: false,
   user: {
@@ -54,12 +56,22 @@ class App extends Component {
   }
 
   calculateFaceLocations = (data) => {
-    let aBox = data.outputs[0].data.regions[0].region_info.bounding_box;
     const image = document.getElementById('inputimage');
 
     const width = Number(image.width);
     const height = Number(image.height);
 
+    let regions = data.outputs[0].data.regions;
+
+    let boxes = regions.map((aRegion) => {
+      let aBox = aRegion.region_info.bounding_box;
+      return this.calculateFaceLocation(aBox, width, height);
+    })
+
+    return boxes;
+  }
+
+  calculateFaceLocation = (aBox, width, height) => {
     return {
       left: aBox.left_col * width,
       right: width - (aBox.right_col * width),
@@ -68,8 +80,8 @@ class App extends Component {
     };
   }
 
-  displayFaceBox = (box) => {
-    this.setState({box: box})
+  displayFaceBox = (boxes) => {
+    this.setState({boxes: boxes})
   }
 
   onInputChange = (event) => {
@@ -130,7 +142,7 @@ class App extends Component {
         <Rank name={this.state.user.name} entries={this.state.user.entries}/>
         <ImageLinkForm onInputChange={this.onInputChange} 
                       onDetectSubmitted={this.onDetectSubmitted}/>
-        <FaceRecognition imgSrc={this.state.imageUrl} box={this.state.box}/>
+        <FaceRecognition imgSrc={this.state.imageUrl} boxes={this.state.boxes}/>
       </div> 
     )
   }
