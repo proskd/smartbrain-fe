@@ -24,6 +24,7 @@ const particlesOptions = {
 };
 
 const defaultBox = {
+    id: 0,
     left: 0,
     right: 0,
     top: 0,
@@ -63,16 +64,18 @@ class App extends Component {
 
     let regions = data.outputs[0].data.regions;
 
+    let id = 0;
     let boxes = regions.map((aRegion) => {
       let aBox = aRegion.region_info.bounding_box;
-      return this.calculateFaceLocation(aBox, width, height);
+      return this.calculateFaceLocation(id++, aBox, width, height);
     })
 
     return boxes;
   }
 
-  calculateFaceLocation = (aBox, width, height) => {
+  calculateFaceLocation = (id, aBox, width, height) => {
     return {
+      id: id,
       left: aBox.left_col * width,
       right: width - (aBox.right_col * width),
       top: aBox.top_row * height,
