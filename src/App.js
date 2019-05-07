@@ -101,7 +101,6 @@ class App extends Component {
     })
       .then(response => response.json())
       .then((clarifaiResponse) => {
-        console.log(clarifaiResponse);
         this.displayFaceBox(this.calculateFaceLocations(clarifaiResponse));
         this.updateUserEntrieSubmitted();
       })
