@@ -7,7 +7,6 @@ import Rank from './components/Rank/Rank.js';
 import SignIn from './components/SignIn/SignIn';
 import Register from './components/Register/Register';
 import Particles from 'react-particles-js';
-import Clarifai from 'clarifai';
 
 import './App.css';
 
@@ -34,9 +33,6 @@ const defaultBox = {
 const initialState = {
   input: '',
   imageUrl: '',
-  clarifaiApp: new Clarifai.App({
-    apiKey: "86b450683ca541aeb9a0d952716829ec"
-  }),
   boxes: [defaultBox],
   route: 'signin',
   isSignedIn: false,
@@ -94,11 +90,19 @@ class App extends Component {
   onDetectSubmitted = (event) => {
     let targetUrl = this.state.input;
     this.setState(Object.assign({}, this.state, {imageUrl: targetUrl}))
-    this.state.clarifaiApp.models.predict(Clarifai.FACE_DETECT_MODEL, 
-      targetUrl
-      )
-      .then((response) => {
-        this.displayFaceBox(this.calculateFaceLocations(response));
+    fetch('http://localhost:3001/image', {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify({
+        url: targetUrl
+      })
+    })
+      .then(response => response.json())
+      .then((clarifaiResponse) => {
+        console.log(clarifaiResponse);
+        this.displayFaceBox(this.calculateFaceLocations(clarifaiResponse));
         this.updateUserEntrieSubmitted();
       })
       .catch(error => console.log(error))
