@@ -20,7 +20,7 @@ class SignIn extends React.Component {
     }
 
     onSubmitSignIn = () => {
-        fetch("http://localhost:3001/signin", {
+        fetch(`${this.props.getApiHost(process.env.SERVER_ENV || 'dev')}/signin`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

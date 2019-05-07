@@ -8,6 +8,8 @@ import SignIn from './components/SignIn/SignIn';
 import Register from './components/Register/Register';
 import Particles from 'react-particles-js';
 
+import {getApiHost} from './config';
+
 import './App.css';
 
 const particlesOptions = {
@@ -90,7 +92,7 @@ class App extends Component {
   onDetectSubmitted = (event) => {
     let targetUrl = this.state.input;
     this.setState(Object.assign({}, this.state, {imageUrl: targetUrl}))
-    fetch('http://localhost:3001/image', {
+    fetch(`${getApiHost(process.env.SERVER_ENV || 'dev')}/image`, {
       method: 'POST',
       headers: {
         'Content-Type':'application/json'
@@ -108,7 +110,7 @@ class App extends Component {
   }
 
   updateUserEntrieSubmitted = () => {
-    fetch("http://localhost:3001/image", {
+    fetch(`${getApiHost(process.env.SERVER_ENV || 'dev')}/image`, {
       method: 'PUT',
       headers: {
         'Content-Type':'application/json'
@@ -162,11 +164,11 @@ class App extends Component {
         content = this.homePage()
         break;
       case 'register':
-        content = <Register onRouteChange={this.onRouteChange} loadUser={this.loadUser} />
+        content = <Register onRouteChange={this.onRouteChange} loadUser={this.loadUser} getApiHost={getApiHost}/>
         break;
       case 'signin':
       default:
-        content = <SignIn onRouteChange={this.onRouteChange} loadUser={this.loadUser}/>
+        content = <SignIn onRouteChange={this.onRouteChange} loadUser={this.loadUser} getApiHost={getApiHost}/>
     }
 
     return (
