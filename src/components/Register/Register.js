@@ -25,7 +25,7 @@ class Register extends React.Component {
     }
 
     onSubmitRegister = () => {
-        fetch(`${this.props.getApiHost(process.env.SERVER_ENV || 'dev')}/register`, {
+        fetch(`${this.props.getApiHost(process.env.REACT_APP_SERVER_ENV || 'dev')}/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -92,7 +92,7 @@ class App extends Component {
   onDetectSubmitted = (event) => {
     let targetUrl = this.state.input;
     this.setState(Object.assign({}, this.state, {imageUrl: targetUrl}))
-    fetch(`${getApiHost(process.env.SERVER_ENV || 'dev')}/image`, {
+    fetch(`${getApiHost(process.env.REACT_APP_SERVER_ENV || 'dev')}/image`, {
       method: 'POST',
       headers: {
         'Content-Type':'application/json'
@@ -110,7 +110,7 @@ class App extends Component {
   }
 
   updateUserEntrieSubmitted = () => {
-    fetch(`${getApiHost(process.env.SERVER_ENV || 'dev')}/image`, {
+    fetch(`${getApiHost(process.env.REACT_APP_SERVER_ENV || 'dev')}/image`, {
       method: 'PUT',
       headers: {
         'Content-Type':'application/json'
